@@ -1,71 +1,72 @@
 //debugged by dzq at 13:11,10/02/2020
-#include <stdio.h>
-#include <stdlib.h>
-#include <windows.h>       //¹â±êÉèÖÃµÄAPI
-#include <time.h>          //Ê³ÎïËæ»ú 
-#include <conio.h>         //°´¼ü¼à¿Ø
+#include <iostream>
+#include <cstdlib>
+#include <windows.h>       //å…‰æ ‡è®¾ç½®çš„API
+#include <ctime>          //é£Ÿç‰©éšæœº 
+#include <conio.h>         //æŒ‰é”®ç›‘æ§
+using namespace std;
 ////////////////////////////////////////////////////
-//             ¸¨Öúºê¶¨Òå
-#define MAPHEIGHT 26       //´°¿ÚµÄÊôĞÔ
+//             è¾…åŠ©å®å®šä¹‰
+#define MAPHEIGHT 26       //çª—å£çš„å±æ€§
 #define MAPWIDTH  60
-#define SNAKESIZE 1000       //ÉßµÄ×î´ó½ÚÊı
+#define SNAKESIZE 1000       //è›‡çš„æœ€å¤§èŠ‚æ•°
 
 
 
-//Êı¾İÉè¼Æ
+//æ•°æ®è®¾è®¡
 ////////////////////////////////////////////////////
-//             Ê³ÎïµÄ½á¹¹Ìå
+//             é£Ÿç‰©çš„ç»“æ„ä½“
 struct
 {
-	//ÈçºÎÈ¥¶¨Î»£º×ø±ê
+	//å¦‚ä½•å»å®šä½ï¼šåæ ‡
 	int x;
 	int y;
 
 }food;
 ////////////////////////////////////////////////////
-//             ÉßµÄ½á¹¹Ìå
+//             è›‡çš„ç»“æ„ä½“
 struct
 {
 	int x[SNAKESIZE];
 	int y[SNAKESIZE];
-	int len;        //ÉßµÄ³¤¶È
-	int speed;      //ÉßµÄÒÆ¶¯ËÙ¶È
+	int len;        //è›‡çš„é•¿åº¦
+	int speed;      //è›‡çš„ç§»åŠ¨é€Ÿåº¦
 }snake;
 
 ////////////////////////////////////////////////////
-//             È«¾Ö±äÁ¿
-int key = 'w';      //³õÊ¼»¯ÒÆ¶¯·½Ïò
-int changeFlag = 0; //ÉßµÄ±ä»¯±ê¼Ç
-int points = 0;//µÃ·Ö 
-int speed=100;//ÉßµÄËÙ¶È£¨Ã¿¸ô¶àÉÙºÁÃëÒÆ¶¯Ò»¸ñ£© 
-int len=3;//³õÊ¼³¤¶È 
+//             å…¨å±€å˜é‡
+int key = 'w';      //åˆå§‹åŒ–ç§»åŠ¨æ–¹å‘
+int changeFlag = 0; //è›‡çš„å˜åŒ–æ ‡è®°
+int points = 0;//å¾—åˆ† 
+int speed=100;//è›‡çš„é€Ÿåº¦ï¼ˆæ¯éš”å¤šå°‘æ¯«ç§’ç§»åŠ¨ä¸€æ ¼ï¼‰ 
+int len=3;//åˆå§‹é•¿åº¦ 
 ////////////////////////////////////////////////////
-//1.»­µØÍ¼
+//1.ç”»åœ°å›¾
 void drawMap();
-//2.Ê³ÎïµÄ²úÉú
+//2.é£Ÿç‰©çš„äº§ç”Ÿ
 void createFood();
-//3.°´¼ü²Ù×÷
+//3.æŒ‰é”®æ“ä½œ
 void keyDown();
-//4.ÉßµÄ×´Ì¬£ºÅĞ¶ÏÊÇ·ñ½áÊøÓÎÏ·
+//4.è›‡çš„çŠ¶æ€ï¼šåˆ¤æ–­æ˜¯å¦ç»“æŸæ¸¸æˆ
 int snakeStatus();
-//5.¸¨Öúº¯Êı£º¹â±êÒÆ¶¯
-void gotoxy(int x, int y);           //TC ÊÇÓĞµÄ£¬ÏÖÔÚÒÑ¾­ÌÔÌ­ÁË£¬Òª×Ô¼ºÊµÏÖ
+//5.è¾…åŠ©å‡½æ•°ï¼šå…‰æ ‡ç§»åŠ¨
+void gotoxy(int x, int y);           //TC æ˜¯æœ‰çš„ï¼Œç°åœ¨å·²ç»æ·˜æ±°äº†ï¼Œè¦è‡ªå·±å®ç°
 
 int main()
 {
 	l2:
-	char c=0;//ÅĞ¶ÏÊÇ·ñÖØĞÂ¿ªÊ¼µÄ±äÁ¿ 
-	changeFlag = 0;key='w';points = 0;//ÖØÖÃ²ÎÊı 
+	char c=0;//åˆ¤æ–­æ˜¯å¦é‡æ–°å¼€å§‹çš„å˜é‡ 
+	changeFlag = 0;key='w';points = 0;//é‡ç½®å‚æ•° 
 	gotoxy(73, 8);
-	printf("Press W¡¢A¡¢S¡¢D to control yourself"); 
+	cout << "Press Wã€Aã€Sã€D to control yourself"; 
 	gotoxy(68, 10);
-	printf("Press P to pause,then press any key to continue"); 
+	cout << "Press P to pause,then press any key to continue"; 
 	gotoxy(67, 12);
-	printf("Keep your keyboard in English or in Capital Lock");
+	cout << "Keep your keyboard in English or in Capital Lock";
 	gotoxy(86, 14);
-	printf("Good Luck!");
+	cout << "Good Luck!";
 	gotoxy(100,20);
-	printf("¡ª¡ªLoong");
+	cout << "â€”â€”Loong";
 	drawMap();
 	while (1)
 	{
@@ -77,17 +78,19 @@ int main()
 			break;
 		}
 	}
+	// ç³»ç»Ÿsleepå‡½æ•°ï¼Œæš‚åœä¸€æ®µæ—¶é—´
+	Sleep(1000);
 	system("cls");
 	gotoxy(MAPWIDTH / 2 - 4, MAPHEIGHT / 2 - 3);
-	printf("Game  Over");
+	cout << "Game  Over";
 	gotoxy(MAPWIDTH / 2 - 4, MAPHEIGHT / 2 - 1);
-	printf("Your points : %d",points);
+	cout << "Your points : " << points;
 	gotoxy(MAPWIDTH / 2 - 4, MAPHEIGHT / 2 + 1);
-	printf("Do you want to start this game again?");
+	cout << "Do you want to start this game again?";
 	gotoxy(MAPWIDTH / 2 - 4, MAPHEIGHT / 2 + 3);
-	printf("Press Y for Yes,others for No");
+	cout << "Press Y for Yes,others for No";
 	gotoxy(MAPWIDTH / 2 - 4, MAPHEIGHT / 2 + 5);
-	scanf("%c",&c);
+	cin >> c;
 	fflush(stdin);
 	if(c=='y'||c=='Y'){
 		system("cls");
@@ -96,46 +99,46 @@ int main()
 	return 0;
 }
 
-//1.»­µØÍ¼
+//1.ç”»åœ°å›¾
 void drawMap()
-{   //¡Ñ:Ê³Îï   ¨€:Ç½    …d£»ÉßÍ·     ¡ö£»ÉßÉí
-	srand((unsigned int)time(NULL));              //Ëæ»úº¯ÊıÖÖ×Ó
-	//1.È¦µØ
-		//1.1 ×óÓÒ±ß¿ò
+{   //âŠ™:é£Ÿç‰©   â–ˆ:å¢™    åï¼›è›‡å¤´     â– ï¼›è›‡èº«
+	srand((unsigned int)time(NULL));              //éšæœºå‡½æ•°ç§å­
+	//1.åœˆåœ°
+		//1.1 å·¦å³è¾¹æ¡†
 	for (int i = 0; i < MAPHEIGHT; i++)
 	{
 		gotoxy(0, i);
-		printf("¨€");
+		cout << "â–ˆ";
 		gotoxy(MAPWIDTH - 2, i);
-		printf("¨€");
+		cout << "â–ˆ";
 	}
-	//1.2 ÉÏÏÂ±ß¿ò
-	for (int i = 0; i < MAPWIDTH; i += 2)          //ÒòÎª¨€Õ¼Á½¸ö×Ö·û
+	//1.2 ä¸Šä¸‹è¾¹æ¡†
+	for (int i = 0; i < MAPWIDTH; i += 2)          //å› ä¸ºâ–ˆå ä¸¤ä¸ªå­—ç¬¦
 	{
 		gotoxy(i, 0);
-		printf("¨€");
+		cout << "â–ˆ";
 		gotoxy(i, MAPHEIGHT - 1);
-		printf("¨€");
+		cout << "â–ˆ";
 	}
-	//2.»­Éß
-		//2.1 È·¶¨ÉßµÄÊôĞÔ
+	//2.ç”»è›‡
+		//2.1 ç¡®å®šè›‡çš„å±æ€§
 	snake.len = len;
 	snake.speed = speed;
-	//2.2 »­Éß
+	//2.2 ç”»è›‡
 	snake.x[0] = MAPWIDTH / 2;
-	snake.y[0] = MAPHEIGHT - 6;                //¿ªÊ¼ÉßÍ·ÔÚÆÁÄ»ÖĞÑë
+	snake.y[0] = MAPHEIGHT - 6;                //å¼€å§‹è›‡å¤´åœ¨å±å¹•ä¸­å¤®
 	gotoxy(snake.x[0], snake.y[0]);
-	printf("¡ö");                              //Ò»½Ú ÊÇx=2
-	//»­Ê£ÏÂÉíÌå
+	cout << "â– ";                              //ä¸€èŠ‚ æ˜¯x=2
+	//ç”»å‰©ä¸‹èº«ä½“
 	for (int k = 1; k < snake.len; k++)
 	{
 		snake.x[k] = snake.x[k - 1] + 2;
 		snake.y[k] = snake.y[k - 1];
 		gotoxy(snake.x[k], snake.y[k]);
-		printf("¡ö");
+		cout << "â– ";
 	}
-	//3.»­Ê³Îï
-		//3.1È·¶¨×ø±ê
+	//3.ç”»é£Ÿç‰©
+		//3.1ç¡®å®šåæ ‡
 	while (1)
 	{
 		food.x = rand() % (MAPWIDTH - 4)+2;
@@ -145,72 +148,72 @@ void drawMap()
 			break;
 		}
 	}
-	//3.2»­³öÀ´¾Í¿ÉÒÔ
+	//3.2ç”»å‡ºæ¥å°±å¯ä»¥
 	gotoxy(food.x, food.y);
-	printf("¡Ñ");
+	cout << "âŠ™";
 }
 void drawMap1()
 {   gotoxy(73, 8);
-	printf("Press W¡¢A¡¢S¡¢D to control yourself"); 
+	cout << "Press Wã€Aã€Sã€D to control yourself"; 
 	gotoxy(68, 10);
-	printf("Press P to pause,then press any key to continue"); 
+	cout << "Press P to pause,then press any key to continue"; 
 	gotoxy(67, 12);
-	printf("Keep your keyboard in English or in Capital Lock");
+	cout << "Keep your keyboard in English or in Capital Lock";
 	gotoxy(86, 14);
-	printf("Good Luck!");
+	cout << "Good Luck!";
 	gotoxy(100,20);
-	printf("¡ª¡ªLoong");
-	//1.È¦µØ
-		//1.1 ×óÓÒ±ß¿ò
+	cout << "â€”â€”Loong";
+	//1.åœˆåœ°
+		//1.1 å·¦å³è¾¹æ¡†
 	for (int i = 0; i < MAPHEIGHT; i++)
 	{
 		gotoxy(0, i);
-		printf("¨€");
+		cout << "â–ˆ";
 		gotoxy(MAPWIDTH - 2, i);
-		printf("¨€");
+		cout << "â–ˆ";
 	}
-	//1.2 ÉÏÏÂ±ß¿ò
-	for (int i = 0; i < MAPWIDTH; i += 2)          //ÒòÎª¨€Õ¼Á½¸ö×Ö·û
+	//1.2 ä¸Šä¸‹è¾¹æ¡†
+	for (int i = 0; i < MAPWIDTH; i += 2)          //å› ä¸ºâ–ˆå ä¸¤ä¸ªå­—ç¬¦
 	{
 		gotoxy(i, 0);
-		printf("¨€");
+		cout << "â–ˆ";
 		gotoxy(i, MAPHEIGHT - 1);
-		printf("¨€");
+		cout << "â–ˆ";
 	}
-	//2.»­Éß
-	//2.2 »­Éß
+	//2.ç”»è›‡
+	//2.2 ç”»è›‡
 	gotoxy(snake.x[0], snake.y[0]);
-	printf("¡ö");                              //Ò»½Ú ÊÇx=2
-	//»­Ê£ÏÂÉíÌå
+	cout << "â– ";                              //ä¸€èŠ‚ æ˜¯x=2
+	//ç”»å‰©ä¸‹èº«ä½“
 	for (int k = 1; k < snake.len; k++)
 	{
 		gotoxy(snake.x[k], snake.y[k]);
-		printf("¡ö");
+		cout << "â– ";
 	}
-	//3.»­Ê³Îï
-	//3.2»­³öÀ´¾Í¿ÉÒÔ
+	//3.ç”»é£Ÿç‰©
+	//3.2ç”»å‡ºæ¥å°±å¯ä»¥
 	gotoxy(food.x, food.y);
-	printf("¡Ñ");
+	cout << "âŠ™";
 }
-//2.Ê³ÎïµÄ²úÉú
+//2.é£Ÿç‰©çš„äº§ç”Ÿ
 void createFood()
 {
-	//Éß°ÑÊ³Îï³ÔÁË
+	//è›‡æŠŠé£Ÿç‰©åƒäº†
 	if (snake.x[0] == food.x && snake.y[0] == food.y)
 	{
 		srand((unsigned int)time(NULL));
-		//²úÉúµÄÊ³Îï²»ÄÜÔÚÉßÉíÉÏ£¬²¢ÇÒ×ø±êÒªÊÇÅ¼Êı
+		//äº§ç”Ÿçš„é£Ÿç‰©ä¸èƒ½åœ¨è›‡èº«ä¸Šï¼Œå¹¶ä¸”åæ ‡è¦æ˜¯å¶æ•°
 		while (1)
 		{
 			int flag = 1;
 			food.x = rand() % (MAPWIDTH - 4) + 2;
 			food.y = rand() % (MAPHEIGHT - 2) + 1;
-			//²úÉúµÄÊ³Îï²»ÄÜÔÚÉßÉíÉÏ
+			//äº§ç”Ÿçš„é£Ÿç‰©ä¸èƒ½åœ¨è›‡èº«ä¸Š
 			for (int k = 0; k < snake.len; k++)
 			{
 				if (snake.x[k] == food.x && snake.y[k] == food.y)
 				{
-					flag = 0;                            //Ê³Îï²»ºÏÊÊµÄ±êÖ¾
+					flag = 0;                            //é£Ÿç‰©ä¸åˆé€‚çš„æ ‡å¿—
 					break;
 				}
 			}
@@ -220,43 +223,43 @@ void createFood()
 			}
 		}
 		gotoxy(food.x, food.y);
-		printf("¡Ñ");
+		cout << "âŠ™";
 		snake.len++;
 		changeFlag = 1;
 		points++;
 	}
 }
-//3.°´¼ü²Ù×÷
+//3.æŒ‰é”®æ“ä½œ
 void keyDown()
 {
-	int key1=key;//±ê¼ÇÉÏÒ»´ÎµÄÒÆ¶¯ 
-	//ÎŞ°´¼ü´¦Àí
+	int key1=key;//æ ‡è®°ä¸Šä¸€æ¬¡çš„ç§»åŠ¨ 
+	//æ— æŒ‰é”®å¤„ç†
 	if (_kbhit())
-	{    //ÓĞ°´¼ü½ÓÊÜ
+	{    //æœ‰æŒ‰é”®æ¥å—
 		key = _getch();
 	}
-	//²Á³ı×îºóÎ»ÖÃ
+	//æ“¦é™¤æœ€åä½ç½®
 	if (!changeFlag)
 	{
 		gotoxy(snake.x[snake.len - 1], snake.y[snake.len - 1]);
-		printf("  ");
+		cout << "  ";
 	}
-	//ºóÃæµÄÉßÉí
+	//åé¢çš„è›‡èº«
 	for (int i = snake.len - 1; i > 0; i--)
 	{
 		snake.x[i] = snake.x[i - 1];
 		snake.y[i] = snake.y[i - 1];
 	}
 	if(key=='p'){
-	system("pause");//ÔİÍ£ 
-	system("cls");//ÇåÆÁ 
-	drawMap1();//ÖØĞÂ°ÑµØÍ¼µÈ¶«Î÷»­³öÀ´£¬µ«²»ÓÃÖØĞÂ¶¨Òå×ø±ê£¬ËùÒÔĞÂÉèÁËÒ»¸öº¯Êı 
+	system("pause");//æš‚åœ 
+	system("cls");//æ¸…å± 
+	drawMap1();//é‡æ–°æŠŠåœ°å›¾ç­‰ä¸œè¥¿ç”»å‡ºæ¥ï¼Œä½†ä¸ç”¨é‡æ–°å®šä¹‰åæ ‡ï¼Œæ‰€ä»¥æ–°è®¾äº†ä¸€ä¸ªå‡½æ•° 
 	}
-	if ((key1=='s'||key1=='S')&&(key=='w'||key=='W')) key='s';//Éß²»ÄÜÏò·´·½ÏòÒÆ¶¯ 
+	if ((key1=='s'||key1=='S')&&(key=='w'||key=='W')) key='s';//è›‡ä¸èƒ½å‘åæ–¹å‘ç§»åŠ¨ 
 	if ((key1=='w'||key1=='W')&&(key=='s'||key=='S')) key='w';
 	if ((key1=='a'||key1=='A')&&(key=='d'||key=='D')) key='a';	
 	if ((key1=='d'||key1=='D')&&(key=='a'||key=='A')) key='d';
-	//ÒÆ¶¯·½Ïò´¦Àí
+	//ç§»åŠ¨æ–¹å‘å¤„ç†
 	l:
 	switch (key)
 	{
@@ -270,7 +273,7 @@ void keyDown()
 		break;
 	case'a':
 	case'A':
-		snake.x[0] -= 2;                             //Ò»¸ö·ûºÅÕ¼ÓÃÁ½¸ö×Ö·û
+		snake.x[0] -= 2;                             //ä¸€ä¸ªç¬¦å·å ç”¨ä¸¤ä¸ªå­—ç¬¦
 		break;
 	case'd':
 	case'D':
@@ -281,16 +284,16 @@ void keyDown()
 	goto l;
 	}
 	gotoxy(snake.x[0], snake.y[0]);
-	printf("¡ö");
+	cout << "â– ";
 	changeFlag = 0;
-	gotoxy(MAPHEIGHT + 2, 0);                        //ÒÆ¶¯²»ÄÜÒ»Ö±¿´×Å¹â±ê
+	gotoxy(MAPHEIGHT + 2, 0);                        //ç§»åŠ¨ä¸èƒ½ä¸€ç›´çœ‹ç€å…‰æ ‡
 }
-//4.ÉßµÄ×´Ì¬£ºÅĞ¶ÏÊÇ·ñ½áÊøÓÎÏ·
+//4.è›‡çš„çŠ¶æ€ï¼šåˆ¤æ–­æ˜¯å¦ç»“æŸæ¸¸æˆ
 int snakeStatus()
 {
 	if (snake.y[0] == 0 || snake.y[0] == MAPHEIGHT -2 || snake.x[0] == 0 || snake.x[0] == MAPWIDTH - 2)
 		return 0;
-	//ÉßÍ·²»ÄÜ×²×Ô¼º
+	//è›‡å¤´ä¸èƒ½æ’è‡ªå·±
 	for (int k = 1; k < snake.len; k++)
 	{
 		if (snake.x[0] == snake.x[k] && snake.y[k] == snake.y[0])
@@ -298,17 +301,17 @@ int snakeStatus()
 	}
 	return 1;
 }
-//5.¸¨Öúº¯Êı£º¹â±êÒÆ¶¯
-void gotoxy(int x, int y)            //TC ÊÇÓĞµÄ£¬ÏÖÔÚÒÑ¾­ÌÔÌ­ÁË£¬Òª×Ô¼ºÊµÏÖ
+//5.è¾…åŠ©å‡½æ•°ï¼šå…‰æ ‡ç§»åŠ¨
+void gotoxy(int x, int y)            //TC æ˜¯æœ‰çš„ï¼Œç°åœ¨å·²ç»æ·˜æ±°äº†ï¼Œè¦è‡ªå·±å®ç°
 {
-	//µ÷ÓÃwin32 API È¥ÉèÖÃ¿ØÖÆÌ¨µÄ¹â±êÎ»ÖÃ
-	//1.ÕÒµ½¿ØÖÆÌ¨µÄ´°¿Ú
+	//è°ƒç”¨win32 API å»è®¾ç½®æ§åˆ¶å°çš„å…‰æ ‡ä½ç½®
+	//1.æ‰¾åˆ°æ§åˆ¶å°çš„çª—å£
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	//2.ÉèÖÃ×ø±ê
+	//2.è®¾ç½®åæ ‡
 	COORD coord;
-	//3.ÉèÖÃ×ø±ê
+	//3.è®¾ç½®åæ ‡
 	coord.X = x;
 	coord.Y = y;
-	//4.Í¬²½µ½¿ØÖÆÌ¨SetConsoleCursorPosition
+	//4.åŒæ­¥åˆ°æ§åˆ¶å°SetConsoleCursorPosition
 	SetConsoleCursorPosition(handle, coord);
 }
