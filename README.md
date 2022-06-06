@@ -5,20 +5,20 @@
 特别鸣谢：USTC@杜兆琪
 
 #### 软件架构
-软件架构说明
-
+编译器：Microsoft Visual C++ 2022  
+操作系统：Windows 11 Pro  
+  
+(可选)编译器：MinGw 8.1.0
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  务必确保Windows已安装Visual C++ Runtime
+2.  参考安装链接：https://docs.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist?view=msvc-170
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  对于Windows 11用户，请务必运行时将Windows终端-设置-启动-默认终端应用程序，改为“Windows 控制台主机”。
+2.  双击运行`Snake V2.0.exe`
 
 #### 参与贡献
 
