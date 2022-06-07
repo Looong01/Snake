@@ -353,21 +353,21 @@ void keyDown()
 		gotoxy(MAPWIDTH / 2 - 8, MAPHEIGHT / 2+1);
 		printf("\033[47;31;5m                 \033[0m");
 		gotoxy(119, 1);
-		system("pause>nul");//暂停
+		
+		// system("pause>nul");//暂停
+		// system("cls"); 
+		// drawMap1();
 
-		system("cls"); 
-		drawMap1();
+		b:
+		key3 = _getch();
+		fflush(stdin);
 
-		// b:
-		// key3 = _getch();
-		// fflush(stdin);
-
-		// if (key3 == ' ')
-		// {
-		// 	system("cls"); 
-		// 	drawMap1();
-		// }
-		// else goto b;
+		if (key3 == ' ')
+		{
+			system("cls"); 
+			drawMap1();
+		}
+		else goto b;
 	}
 	   	  
 	if ((key1 == 's' || key1 == 'S') && (key == 'w' || key == 'W')) key = 's';//蛇不能向反方向移动 
