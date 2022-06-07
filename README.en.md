@@ -1,23 +1,24 @@
 # Snake
 
 #### Description
-大一时候写的贪吃蛇
-特别鸣谢：USTC@杜兆琪
+Snake written in my freshman year about 
+Special thanks: USTC@DuZhaoqi
 
 #### Software Architecture
-Software architecture description
+Compiler: Microsoft Visual C++ 2022  
+Operating System: Windows 11 Pro  
+  
+(optional) Compiler: MinGw 8.1.0
 
 #### Installation
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  Make sure Windows has Visual C++ Runtime
+2.  Refer to the installation link: https://docs.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist?view=msvc-170
 
 #### Instructions
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  For Windows 11 users, be sure to change the Windows Terminal-Settings-Startup-Default Terminal application to "Windows Console Host" when running.
+2.  Double-click 'Snake V2.0.exe' to run.
 
 #### Contribution
 
